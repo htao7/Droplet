@@ -28,8 +28,9 @@ def Seg(cont,canvas_size):
 def Cal(cont,img):
     canvas_size = img.shape
     _,img = cv2.threshold(img,75,255,cv2.THRESH_BINARY_INV)
-    kernel = np.ones((3, 3), np.uint8)
-    img = cv2.morphologyEx(img,cv2.MORPH_OPEN,kernel,iterations=2)
+    # kernel = np.ones((3, 3), np.uint8)
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    img = cv2.morphologyEx(img,cv2.MORPH_OPEN,kernel,iterations=3)
     img = cv2.bitwise_not(img)
 
     im_single[img == 0] = (0, 255, 0)
@@ -68,11 +69,14 @@ img_edge = cv2.Laplacian(img,cv2.CV_8U,ksize=5)
 
 # img_sharpened = cv2.add(cv2.bitwise_not(img),img_edge)
 _,img_thresh = cv2.threshold(img_edge,150,255,cv2.THRESH_BINARY)
-kernel = np.ones((3,3),np.uint8)
-img_thresh = cv2.morphologyEx(img_thresh,cv2.MORPH_CLOSE,kernel)
+# kernel = np.ones((3,3),np.uint8)
+closekernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+img_thresh = cv2.morphologyEx(img_thresh,cv2.MORPH_CLOSE,closekernel)
+openkernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+img_thresh = cv2.morphologyEx(img_thresh,cv2.MORPH_OPEN,openkernel)
 _,cont,_= cv2.findContours(img_thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
-# cv2.imshow('a',img_thresh)
+cv2.imshow('a',img_thresh)
 
 
 
@@ -110,8 +114,8 @@ Cal(droplets_single,img)
 cv2.imshow('singles',im_single)
 cv2.imshow('cluster',im_cluster)
 
-cv2.imwrite('single.png',im_single)
-cv2.imwrite('cluster.png',im_cluster)
+# cv2.imwrite('single.png',im_single)
+# cv2.imwrite('cluster.png',im_cluster)
 
 
 cv2.waitKey(0)
