@@ -30,7 +30,7 @@ def Cal(cont,img):
     _,img = cv2.threshold(img,75,255,cv2.THRESH_BINARY_INV)
     kernel = np.ones((3, 3), np.uint8)
     # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-    img = cv2.morphologyEx(img,cv2.MORPH_OPEN,kernel,iterations=3)
+    img = cv2.morphologyEx(img,cv2.MORPH_OPEN,kernel,iterations=2)
     img = cv2.bitwise_not(img)
 
     im_single[img == 0] = (0, 255, 0)
@@ -76,7 +76,7 @@ img_thresh = cv2.morphologyEx(img_thresh,cv2.MORPH_CLOSE,closekernel)
 # img_thresh = cv2.morphologyEx(img_thresh,cv2.MORPH_OPEN,openkernel)
 _,cont,_= cv2.findContours(img_thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
-cv2.imshow('a',img_thresh)
+# cv2.imshow('a',img_thresh)
 
 
 
